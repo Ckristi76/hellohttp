@@ -1,0 +1,46 @@
+{
+    "id": "hellohttp",
+    "cpus": 0.01,
+    "mem": 10.0,
+    "instances": 9,
+    "constraints": [
+        ["hostname", "GROUP_BY", "9"]
+    ],
+	"env": {
+        "SERVICE_NAME": "hellohttp",
+        "SERVICE_TAGS": "env--dev,version--latest",
+        "SERVICE_CHECK_HTTP": "/",
+        "SERVICE_CHECK_INTERVAL": "10s",
+        "SERVICE_CHECK_TIMEOUT": "2s"
+    },
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "milsonian/hellohttp",
+            "network": "BRIDGE",
+            "portMappings": [
+                {
+                    "containerPort": 8123,
+                    "hostPort": 0,
+                    "protocol": "tcp"
+                }
+            ]
+        },
+		"volumes": [
+			]
+    },
+    "healthChecks": [
+        {
+            "protocol": "HTTP",
+            "portIndex": 0,
+            "path": "/",
+            "gracePeriodSeconds": 30,
+            "intervalSeconds": 15,
+            "maxConsecutiveFailures": 3
+        }
+    ],
+    "upgradeStrategy": {
+        "minimumHealthCapacity" : 1,
+        "maximumOverCapacity" : 0.5
+    }
+}
